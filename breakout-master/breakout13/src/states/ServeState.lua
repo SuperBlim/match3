@@ -24,8 +24,10 @@ function ServeState:enter(params)
     self.score = params.score
     self.highScores = params.highScores
     self.level = params.level
+    self.powerup = Powerup()
     self.recoverPoints = params.recoverPoints
-
+    self.powerup.x =  math.random(VIRTUAL_WIDTH)
+    self.powerup.y =  (VIRTUAL_HEIGHT / math.random(VIRTUAL_HEIGHT))
     -- init new ball (random color for fun)
     self.ball = Ball()
     self.ball.skin = math.random(7)
@@ -59,6 +61,7 @@ end
 function ServeState:render()
     self.paddle:render()
     self.ball:render()
+    self.powerup:render()
 
     for k, brick in pairs(self.bricks) do
         brick:render()
