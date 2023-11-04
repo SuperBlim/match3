@@ -13,7 +13,7 @@
     for visual variety.
 ]]
 
-powerup = Class{}
+Powerup = Class{}
 
 function Powerup:init(skin)
     -- simple positional and dimensional variables
