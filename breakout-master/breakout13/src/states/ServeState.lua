@@ -25,6 +25,7 @@ function ServeState:enter(params)
     self.highScores = params.highScores
     self.level = params.level
     self.powerup = Powerup()
+    self.powerup.skin = 0
     self.recoverPoints = params.recoverPoints
     self.powerup.x =  math.random(VIRTUAL_WIDTH)
     self.powerup.y =  (VIRTUAL_HEIGHT / math.random(VIRTUAL_HEIGHT))
