@@ -25,7 +25,7 @@ function ServeState:enter(params)
     self.highScores = params.highScores
     self.level = params.level
     self.powerup = Powerup()
-    self.powerup.skin = 0
+    self.powerup.skin = 1
     self.recoverPoints = params.recoverPoints
     self.powerup.x =  math.random(VIRTUAL_WIDTH)
     self.powerup.y =  (VIRTUAL_HEIGHT / math.random(VIRTUAL_HEIGHT))
@@ -50,6 +50,7 @@ function ServeState:update(dt)
             highScores = self.highScores,
             ball = self.ball,
             level = self.level,
+            powerup = self.powerup,
             recoverPoints = self.recoverPoints
         })
     end

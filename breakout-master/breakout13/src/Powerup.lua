@@ -25,7 +25,7 @@ function Powerup:init(skin)
     self.dy = 0
     self.dx = 0
 
-    -- this will effectively be the color of our Powerup, and we will index
+    -- this will effectively be the color of our Powerup, and we will indexsssssssssssssssssssssssssss
     -- our table of Quads relating to the global block texture using this
     self.skin = skin
 end
@@ -88,6 +88,6 @@ end
 function Powerup:render()
     -- gTexture is our global texture for all blocks
     -- gPowerupFrames is a table of quads mapping to each individual Powerup skin in the texture
-    love.graphics.draw(gTextures['main'], gFrames['Powerups'][self.skin],
+    love.graphics.draw(gTextures['main'], gFrames['powerups'][self.skin],
         self.x, self.y)
 end
