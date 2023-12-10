@@ -15,10 +15,29 @@
 
 Powerup = Class{}
 
+
+paletteColors2 = {
+    -- blue
+    [1] = {
+        ['r'] = 99,
+        ['g'] = 155,
+        ['b'] = 255
+    }
+}
+
+
+
 function Powerup:init(skin)
     -- simple positional and dimensional variables
     self.width = 8
     self.height = 8
+
+
+
+    self.psystem = love.graphics.newParticleSystem(gTextures['particle'], 64)
+    self.psystem:setParticleLifetime(0.5, 1)
+    self.psystem:setLinearAcceleration(-15, 0, 15, 80)
+    self.psystem:setEmissionArea('normal', 10, 10)
 
     -- these variables are for keeping track of our velocity on both the
     -- X and Y axis, since the Powerup can move in two dimensions
@@ -61,6 +80,23 @@ function Powerup:reset()
     self.dy = 0
 end
 
+function Powerup:hit()
+    gSounds['powerup']:play()
+    
+    self.psystem:setColors(
+        paletteColors2[1].r / 255,
+        paletteColors2[1].g / 255,
+        paletteColors2[1].b / 255,
+        55 * (1) / 255,
+        paletteColors2[1].r / 255,
+        paletteColors2[1].g / 255,
+        paletteColors2[1].b / 255,
+        0
+    )
+    self.psystem:emit(64)
+end
+
+
 function Powerup:update(dt)
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt
@@ -88,6 +124,10 @@ end
 function Powerup:render()
     -- gTexture is our global texture for all blocks
     -- gPowerupFrames is a table of quads mapping to each individual Powerup skin in the texture
-    love.graphics.draw(gTextures['main'], gFrames['powerups'][self.skin],
+    love.graphics.draw(gTextures['main'], gFrames['powerups'][1],
         self.x, self.y)
+end
+
+function Powerup:renderParticles()
+    love.graphics.draw(self.psystem, self.x + 16, self.y + 8)
 end

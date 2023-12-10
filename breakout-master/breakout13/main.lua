@@ -94,7 +94,7 @@ function love.load()
         ['recover'] = love.audio.newSource('sounds/recover.wav', 'static'),
         ['high-score'] = love.audio.newSource('sounds/high_score.wav', 'static'),
         ['pause'] = love.audio.newSource('sounds/pause.wav', 'static'),
-
+        ['powerup'] = love.audio.newSource('sounds/powerup.wav', 'static'),
         ['music'] = love.audio.newSource('sounds/music.wav', 'static')
     }
 
@@ -291,6 +291,7 @@ function displayFPS()
     -- simple FPS display across all states
     love.graphics.setFont(gFonts['small'])
     love.graphics.setColor(0, 1, 0, 1)
+    --love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 5, 5)
     love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 5, 5)
 end
 
