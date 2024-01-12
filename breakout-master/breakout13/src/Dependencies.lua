@@ -34,7 +34,7 @@ require 'src/StateMachine'
 -- utility functions, mainly for splitting our sprite sheet into various Quads
 -- of differing sizes for paddles, balls, bricks, etc.
 require 'src/Util'
-
+require 'src/key'
 require 'src/Powerup'
 -- each of the individual states our game can be in at once; each state has
 -- its own update and render methods that can be called by our state machine

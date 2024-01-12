@@ -29,6 +29,7 @@ function PlayState:enter(params)
     self.ball = params.ball
     self.level = params.level
     self.powerup = params.powerup
+    self.key = params.key
     self.ball2 = Ball()
     self.recoverPoints = 5000
     self.ball2.skin = 1
@@ -37,6 +38,7 @@ function PlayState:enter(params)
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
     self.powerup.dy = math.random(80, 100)
+    self.key.dy = math.random(80, 100)
     self.ball2.dx = 0
     self.ball2.dy = 0
     self.ball2.x = 0
@@ -48,7 +50,6 @@ function PlayState:enter(params)
     self.ball3.y = 0
     self.ball3.skin = 2
     
-    self.paddle.size = math.random(1, 4)
 
     
 end
@@ -68,7 +69,7 @@ function PlayState:update(dt)
         gSounds['pause']:play()
         return
     end
-    self.paddlesize = self.paddle.size
+
     self.paddle:update(dt)
     self.ball:update(dt)
 
@@ -77,6 +78,11 @@ function PlayState:update(dt)
         self.ball2:update(dt)
         self.ball3:update(dt)
     end
+
+    if self.paddle.x + self.paddle.width / 2 - self.ball.x <= self.powerup.x + self.ball.x then
+        self.key:update(dt)
+    end
+
     if self.ball:collides(self.paddle) then
         -- raise ball above paddle in case it goes below it, then reverse dy
         self.ball.y = self.paddle.y - 8
@@ -156,6 +162,10 @@ function PlayState:update(dt)
         self.ball3.y = self.ball.y
         self.ball3.dx = math.random(-200, 200)
         self.ball3.dy = math.random(-50, -60)
+    end
+
+    if self.key:collides(self.paddle) then
+        self.key:hit()
     end
 
     -- detect collision across all bricks with the ball
@@ -297,7 +307,6 @@ function PlayState:update(dt)
                 -- flip x velocity and reset position outside of brick
                 self.ball3.dx = -self.ball3.dx
                 self.ball3.x = brick.x - 8
-            
             -- right edge; only check if we're moving left, , and offset the check by a couple of pixels
             -- so that flush corner hits register as Y flips, not X flips
             elseif self.ball3.x + 6 > brick.x + brick.width and self.ball3.dx < 0 then
@@ -408,6 +417,8 @@ function PlayState:update(dt)
             -- slightly scale the y velocity to speed up the game, capping at +- 150
             if math.abs(self.ball.dy) < 150 then
                 self.ball.dy = self.ball.dy * 1.02
+                self.paddle.size = math.min(self.paddle.size + 1, 4)
+                self.paddle.width = math.min(self.paddle.width + 24, 78)
             end
 
             -- only allow colliding with one brick, for corners
@@ -420,7 +431,8 @@ function PlayState:update(dt)
     if self.ball.y >= VIRTUAL_HEIGHT then
         self.health = self.health - 1
         gSounds['hurt']:play()
-
+        self.paddle.size = math.max(self.paddle.size - 1, 1)
+        self.paddle.width = self.paddle.width - 24 
         if self.health == 0 then
             gStateMachine:change('game-over', {
                 score = self.score,
@@ -463,11 +475,22 @@ function PlayState:render()
     self.ball:render()
     if self.score >= self.paddle.x + self.ball.y then
         self.powerup:render()
-        self.powerup:renderParticles()
         self.ball3:render()
         self.ball2:render()
     end
-    renderScore(self.score )
+    
+    
+    
+    if self.paddle.x + self.paddle.width / 2 - self.ball.x <= self.powerup.x + self.ball.x then
+        self.key:render()
+        self.powerup:renderParticles()
+        self.key:renderParticles()
+    end
+
+
+
+
+    renderScore(self.score)
     --renderScore(self.score)
     renderHealth(self.health)
 
