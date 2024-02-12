@@ -31,7 +31,7 @@ function key:init(skin)
     -- simple positional and dimensional variables
     self.width = 8
     self.height = 8
-
+    haskey = 0
 
 
     self.psystem = love.graphics.newParticleSystem(gTextures['particle'], 64)
@@ -78,9 +78,11 @@ function key:reset()
     self.y = VIRTUAL_HEIGHT / 2 - 2
     self.dx = 0
     self.dy = 0
+    haskey = 0
 end
 
 function key:hit()
+    haskey = 1
     gSounds['powerup']:play()
     
     self.psystem:setColors(

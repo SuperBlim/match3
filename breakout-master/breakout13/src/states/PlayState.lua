@@ -41,13 +41,13 @@ function PlayState:enter(params)
     self.key.dy = math.random(80, 100)
     self.ball2.dx = 0
     self.ball2.dy = 0
-    self.ball2.x = 0
-    self.ball2.y = 0
+    self.ball2.x = 5
+    self.ball2.y = 5
     self.ball3 = Ball()
     self.ball3.dx = 0
     self.ball3.dy = 0
-    self.ball3.x = 0
-    self.ball3.y = 0
+    self.ball3.x = 5
+    self.ball3.y = 5
     self.ball3.skin = 2
     
 
@@ -148,6 +148,7 @@ function PlayState:update(dt)
 
     if self.powerup:collides(self.paddle) then
         self.powerup:hit()
+        
         self.ball2 = Ball()
         self.ball2.skin = 2
         self.ball2.x = self.ball.x
@@ -473,17 +474,17 @@ function PlayState:render()
     end
     self.paddle:render()
     self.ball:render()
-    if self.score >= self.paddle.x + self.ball.y then
+    if self.score >= 500 then
         self.powerup:render()
         self.ball3:render()
         self.ball2:render()
+        self.powerup:renderParticles()
     end
     
     
     
     if self.paddle.x + self.paddle.width / 2 - self.ball.x <= self.powerup.x + self.ball.x then
         self.key:render()
-        self.powerup:renderParticles()
         self.key:renderParticles()
     end
 

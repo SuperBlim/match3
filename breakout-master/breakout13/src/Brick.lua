@@ -47,6 +47,12 @@ paletteColors = {
         ['r'] = 251,
         ['g'] = 242,
         ['b'] = 54
+    },
+    --key
+    [6] = {
+        ['r'] = 251,
+        ['g'] = 242,
+        ['b'] = 54
     }
 }
 
@@ -92,11 +98,11 @@ function Brick:hit()
         paletteColors[self.color].r / 255,
         paletteColors[self.color].g / 255,
         paletteColors[self.color].b / 255,
-        55 * (self.tier + 1) / 255,
-        paletteColors[self.color].r / 255,
-        paletteColors[self.color].g / 255,
-        paletteColors[self.color].b / 255,
-        0
+        55 * (self.tier + 1) / 255
+        --paletteColors[self.color].r / 255,
+        --paletteColors[self.color].g / 255,
+        --paletteColors[self.color].b / 255,
+        --0
     )
     self.psystem:emit(64)
 
@@ -111,16 +117,36 @@ function Brick:hit()
             self.tier = self.tier - 1
             self.color = 5
         else
-            self.color = self.color - 1
+            if self.color == 6 then
+                if haskey == 1 then
+                    self.inPlay = false
+                else
+                    self.color = 6
+                end
+            else
+                self.color = self.color - 1
+            end
         end
     else
         -- if we're in the first tier and the base color, remove brick from play
         if self.color == 1 then
             self.inPlay = false
         else
-            self.color = self.color - 1
+            if self.color == 6 then
+                
+                if haskey == 1 then
+                    self.inPlay = false
+                else
+                    self.color = 6
+                end
+            else
+                self.color = self.color - 1
+            end
         end
     end
+    
+   
+    
 
     -- play a second layer sound if the brick is destroyed
     if not self.inPlay then
@@ -135,11 +161,28 @@ end
 
 function Brick:render()
     if self.inPlay then
-        love.graphics.draw(gTextures['main'], 
+        if self.color == 6 then
+            love.graphics.draw(gTextures['main'], 
             -- multiply color by 4 (-1) to get our color offset, then add tier to that
             -- to draw the correct tier and color brick onto the screen
-            gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],
+            gFrames['bricks'][21],
             self.x, self.y)
+            --love.filesystem.write('log.lst', "TIER: "..self.tier..",COLOR: "..self.color..",X: "..self.x..",Y: "..self.y.. '\n')
+        else
+            if self.color == 0 then 
+                self.inplay = false
+                self.color = 1
+            end
+            --love.filesystem.write('coolerlogs.lst', "TIER: "..self.tier..",COLOR: "..self.color..",X: "..self.x..",Y: "..self.y.. '\n')
+            love.graphics.draw(gTextures['main'],
+            -- multiply color by 4 (-1) to get our color offset, then add tier to that
+            -- to draw the correct tier and color brick onto the screen
+            gFrames['bricks'][math.abs(1 + ((self.color - 1) * 4) + self.tier)],
+            self.x, self.y)
+            --love.filesystem.write('lesscoollogs.lst', "TIER: "..self.tier..",COLOR: "..self.color..",X: "..self.x..",Y: "..self.y.. '\n')
+        end
+
+    
     end
 end
 

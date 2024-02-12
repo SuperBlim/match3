@@ -18,6 +18,7 @@ ServeState = Class{__includes = BaseState}
 
 function ServeState:enter(params)
     -- grab game state from params
+    haskey = 0
     self.paddle = params.paddle
     self.bricks = params.bricks
     self.health = params.health

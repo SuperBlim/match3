@@ -201,7 +201,7 @@ function love.draw()
         -- draw at coordinates 0, 0
         0, 0, 
         -- no rotation
-        0,
+        0.001,
         -- scale factors on X and Y axis so it fills the screen
         VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1))
     
@@ -213,7 +213,7 @@ function love.draw()
     
     push:apply('end')
 end
-
+print("Hi")
 --[[
     Loads high scores from a .lst file, saved in LÖVE2D's default save directory in a subfolder
     called 'breakout'.
