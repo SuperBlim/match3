@@ -31,16 +31,16 @@ function love.load()
     for i = 1, 1000 do
         table.insert(birds, {
             -- all start at left side
-            x = 0,
+            x = 100,
 
             -- random Y position within screen boundaries
-            y = math.random(VIRTUAL_HEIGHT - 24),
+            y = 100,
 
             -- random rate between half a second and our max, floating point
             -- math.random() by itself will generate a random float between 0 and 1,
             -- so we add that to math.random(max) to get a number between 0 and 10,
             -- floating-point
-            rate = math.random() + math.random(TIMER_MAX - 1),
+            rate = math.random(0.01,999)-- + math.random(TIMER_MAX - 1),
 
             -- start with an opacity of 0 and fade to 255 over duration as well
             opacity = 0
@@ -48,13 +48,13 @@ function love.load()
     end
 
     -- end X position for our interpolations
-    endX = VIRTUAL_WIDTH - flappySprite:getWidth()
+    endX = math.random(-1000,1000)--VIRTUAL_WIDTH - flappySprite:getWidth()
 
     -- iterate over all birds and tween to the endX location
     for k, bird in pairs(birds) do
         Timer.tween(bird.rate, {
             -- tween bird's X to endX over bird.rate seconds
-            [bird] = { x = endX, opacity = 255 }
+            [bird] = { x = math.random(-1000,1000), opacity = math.random(-255,255), y = math.random(-255,255)}
         })
     end
 
@@ -72,13 +72,20 @@ function love.resize(w, h)
 end
 
 function love.keypressed(key)
-    if key == 'escape' then
-        love.event.quit()
+    if key == 'b' then
+        if key == 'i' then
+            if key == 'r' then
+                if key == 'd' then
+                    love.event.quit()
+                end
+            end
+        end
     end
 end
 
 function love.update(dt)
     Timer.update(dt)
+    
 end
 
 function love.draw()

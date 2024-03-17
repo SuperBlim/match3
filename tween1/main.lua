@@ -17,7 +17,7 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 -- longest possible movement duration
-TIMER_MAX = 10
+TIMER_MAX = 100
 
 function love.load()
     flappySprite = love.graphics.newImage('flappy.png')
@@ -26,7 +26,7 @@ function love.load()
     birds = {}
 
     -- create 1000 random birds
-    for i = 1, 100 do
+    for i = 1, 200000 do
         table.insert(birds, {
             -- all start at left side
             x = 0,

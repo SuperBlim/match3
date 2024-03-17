@@ -61,7 +61,7 @@ function PlayState:enter(params)
     self.level = params.level
 
     -- spawn a board and place it toward the right
-    self.board = params.board or Board(VIRTUAL_WIDTH - 272, 16)
+    self.board = params.board or Board(VIRTUAL_WIDTH - 272, 16, self.level)
 
     -- grab score from params if it was passed
     self.score = params.score or 0
@@ -117,13 +117,12 @@ function PlayState:update(dt)
             self.boardHighlightX = math.max(0, self.boardHighlightX - 1)
             gSounds['select']:play()
         elseif love.keyboard.wasPressed('right') then
-            self.boardHighlightX = math.min(7, self.boardHighlightX + 1)
+            self.boardHighlightX = math.min(7, self.boardHighlightX + 1.0)
             gSounds['select']:play()
         end
 
         -- if we've pressed enter, to select or deselect a tile...
         if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-            
             -- if same tile as currently highlighted, deselect
             local x = self.boardHighlightX + 1
             local y = self.boardHighlightY + 1
@@ -142,7 +141,6 @@ function PlayState:update(dt)
                 gSounds['error']:play()
                 self.highlightedTile = nil
             else
-                
                 -- swap grid positions of tiles
                 local tempX = self.highlightedTile.gridX
                 local tempY = self.highlightedTile.gridY
@@ -196,6 +194,7 @@ function PlayState:calculateMatches()
         -- add score for each match
         for k, match in pairs(matches) do
             self.score = self.score + #match * 50
+            self.timer = self.timer + #match
         end
 
         -- remove any tiles that matched from the board, making empty spaces
@@ -216,6 +215,7 @@ function PlayState:calculateMatches()
     -- if no matches, we can continue playing
     else
         self.canInput = true
+       
     end
 end
 
@@ -239,9 +239,9 @@ function PlayState:render()
 
     -- render highlight rect color based on timer
     if self.rectHighlighted then
-        love.graphics.setColor(217/255, 87/255, 99/255, 1)
+        love.graphics.setColor(217/255, 87/255, self.timer/255, 1)
     else
-        love.graphics.setColor(172/255, 50/255, 50/255, 1)
+        love.graphics.setColor(172/255, 50/255, self.timer/255, 1)
     end
 
     -- draw actual cursor rect
@@ -258,5 +258,6 @@ function PlayState:render()
     love.graphics.printf('Level: ' .. tostring(self.level), 20, 24, 182, 'center')
     love.graphics.printf('Score: ' .. tostring(self.score), 20, 52, 182, 'center')
     love.graphics.printf('Goal : ' .. tostring(self.scoreGoal), 20, 80, 182, 'center')
-    love.graphics.printf('Timer: ' .. tostring(self.timer), 20, 108, 182, 'center')
+    love.graphics.printf('Time left: ' .. tostring(self.timer), 20, 108, 182, 'center')
+    love.graphics.printf('match break pong III' .. tostring(math.random(1000000000000000)), math.random(1000), math.random(000), math.random(2000), 'center')
 end

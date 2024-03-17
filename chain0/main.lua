@@ -8,11 +8,11 @@
 
 push = require 'push'
 
-VIRTUAL_WIDTH = 384
-VIRTUAL_HEIGHT = 216
+VIRTUAL_WIDTH = math.random(1,2000)
+VIRTUAL_HEIGHT = math.random(1,2000)
 
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH =  math.random(1,2000)
+WINDOW_HEIGHT = math.random(1,2000)
 
 -- seconds it takes to move each step
 MOVEMENT_TIME = 2
@@ -32,10 +32,15 @@ function love.load()
 
     -- our four destinations in order, stored as X,Y coordinates
     destinations = {
-        [1] = {x = VIRTUAL_WIDTH - flappySprite:getWidth(), y = 0},
-        [2] = {x = VIRTUAL_WIDTH - flappySprite:getWidth(), y = VIRTUAL_HEIGHT - flappySprite:getHeight()},
-        [3] = {x = 0, y = VIRTUAL_HEIGHT - flappySprite:getHeight()},
-        [4] = {x = 0, y = 0}
+        --[4] = {x = VIRTUAL_WIDTH - flappySprite:getWidth(), y = 0},
+        --[2] = {x = VIRTUAL_WIDTH - flappySprite:getWidth(), y = VIRTUAL_HEIGHT - flappySprite:getHeight()},
+        --[2] = {x = 0, y = VIRTUAL_HEIGHT - flappySprite:getHeight()},
+        [1] = {x = VIRTUAL_WIDTH - flappySprite:getWidth() - math.random(-100,100), y = math.random(-100,100)},
+        [2] = {x = VIRTUAL_WIDTH - flappySprite:getWidth() - math.random(-100,100), y = math.random(-100,100)},
+        [3] = {x = VIRTUAL_WIDTH - flappySprite:getWidth() - math.random(-100,100), y = math.random(-100,100)},
+        [4] = {x = VIRTUAL_WIDTH - flappySprite:getWidth() - math.random(-100,100), y = math.random(-100,100)},
+        [5] = {x = VIRTUAL_WIDTH - flappySprite:getWidth() - math.random(-100,100), y = math.random(-100,100)},
+        [6] = {x = VIRTUAL_WIDTH - flappySprite:getWidth() - math.random(-100,100), y = math.random(-100,100)}
     }
 
     -- add a false "reached" flag to each destination

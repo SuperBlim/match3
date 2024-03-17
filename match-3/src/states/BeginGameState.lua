@@ -15,12 +15,10 @@
 BeginGameState = Class{__includes = BaseState}
 
 function BeginGameState:init()
-    
     -- start our transition alpha at full, so we fade in
     self.transitionAlpha = 1
 
     -- spawn a board and place it toward the right
-    self.board = Board(VIRTUAL_WIDTH - 272, 16)
 
     -- start our level # label off-screen
     self.levelLabelY = -64
@@ -30,12 +28,11 @@ function BeginGameState:enter(def)
     
     -- grab level # from the def we're passed
     self.level = def.level
-
     --
     -- animate our white screen fade-in, then animate a drop-down with
     -- the level text
     --
-
+    self.board = Board(VIRTUAL_WIDTH - 272, 16, self.level)
     -- first, over a period of 1 second, transition our alpha to 0
     Timer.tween(1, {
         [self] = {transitionAlpha = 0}
@@ -44,7 +41,7 @@ function BeginGameState:enter(def)
     -- once that's finished, start a transition of our text label to
     -- the center of the screen over 0.25 seconds
     :finish(function()
-        Timer.tween(0.25, {
+        Timer.tween(0.1, {
             [self] = {levelLabelY = VIRTUAL_HEIGHT / 2 - 8}
         })
         

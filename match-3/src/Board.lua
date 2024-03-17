@@ -13,9 +13,10 @@
 
 Board = Class{}
 
-function Board:init(x, y)
+function Board:init(x, y, level)
     self.x = x
     self.y = y
+    self.level = level
     self.matches = {}
 
     self:initializeTiles()
@@ -32,7 +33,11 @@ function Board:initializeTiles()
         for tileX = 1, 8 do
             
             -- create a new tile at X,Y with a random color and variety
-            table.insert(self.tiles[tileY], Tile(tileX, tileY, math.random(18), math.random(6)))
+            if self.level == 1 then
+                table.insert(self.tiles[tileY], Tile(tileX, tileY, math.random(2,18), 1, math.random(0,10)))
+            else
+                table.insert(self.tiles[tileY], Tile(tileX, tileY, math.random(2,18), math.random(1,math.min(self.level,6),math.random(0,self.level*10)),math.random(0,10)))
+            end
         end
     end
 
@@ -58,6 +63,7 @@ function Board:calculateMatches()
     -- horizontal matches first
     for y = 1, 8 do
         local colorToMatch = self.tiles[y][1].color
+        local shineToMatch = self.tiles[y][1].shiny
 
         matchNum = 1
         
@@ -68,23 +74,38 @@ function Board:calculateMatches()
             if self.tiles[y][x].color == colorToMatch then
                 matchNum = matchNum + 1
             else
+
                 
                 -- set this as the new color we want to watch for
                 colorToMatch = self.tiles[y][x].color
-
+                
+                if self.tiles[y][x].color == 1 then
+                    if matchNum >= 2 then
+                        local match = {}
+                        matchNum = 100
+                        x3 = x -1
+                        for x2 = x - 1,  x - matchNum,-1 do
+                            table.insert(match, self.tiles[y][x2])
+                            x3 = x3 + 1
+                            table.insert(match, self.tiles[y][x3])
+                        end
+                        table.insert(matches, match)
+                    end
+                end
                 -- if we have a match of 3 or more up to now, add it to our matches table
                 if matchNum >= 3 then
                     local match = {}
-
                     -- go backwards from here by matchNum
                     for x2 = x - 1, x - matchNum, -1 do
-                        
+                       
+                            
                         -- add each tile to the match that's in that match
                         table.insert(match, self.tiles[y][x2])
                     end
 
                     -- add this match to our total matches table
                     table.insert(matches, match)
+                    
                 end
 
                 matchNum = 1
@@ -98,14 +119,16 @@ function Board:calculateMatches()
 
         -- account for the last row ending with a match
         if matchNum >= 3 then
-            local match = {}
+            if not self.tiles[y][x].color == 1 then
+                local match = {}
             
-            -- go backwards from end of last row by matchNum
-            for x = 8, 8 - matchNum + 1, -1 do
-                table.insert(match, self.tiles[y][x])
-            end
+                -- go backwards from end of last row by matchNum
+                for x = 8, 8 - matchNum + 1, -1 do
+                    table.insert(match, self.tiles[y][x])
+                end
 
-            table.insert(matches, match)
+                table.insert(matches, match)
+            end
         end
     end
 
@@ -119,9 +142,10 @@ function Board:calculateMatches()
         for y = 2, 8 do
             if self.tiles[y][x].color == colorToMatch then
                 matchNum = matchNum + 1
+
             else
                 colorToMatch = self.tiles[y][x].color
-
+                
                 if matchNum >= 3 then
                     local match = {}
 
