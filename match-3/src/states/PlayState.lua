@@ -21,7 +21,7 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init()
     
     -- start our transition alpha at full, so we fade in
-    self.transitionAlpha = 1
+    self.transitionAlpha = 0.9
 
     -- position in the grid which we're highlighting
     self.boardHighlightX = 0
@@ -49,8 +49,8 @@ function PlayState:init()
         self.timer = self.timer - 1
 
         -- play warning sound on timer if we get low
-        if self.timer <= 5 then
-            gSounds['clock']:play()
+        if self.timer <= 10 then
+            gSounds['error']:play()
         end
     end)
 end
@@ -144,7 +144,9 @@ function PlayState:update(dt)
                 -- swap grid positions of tiles
                 local tempX = self.highlightedTile.gridX
                 local tempY = self.highlightedTile.gridY
-
+                tempX1 = self.highlightedTile.gridX
+                tempY1 = self.highlightedTile.gridY
+                
                 local newTile = self.board.tiles[y][x]
 
                 self.highlightedTile.gridX = newTile.gridX
@@ -155,20 +157,36 @@ function PlayState:update(dt)
                 -- swap tiles in the tiles table
                 self.board.tiles[self.highlightedTile.gridY][self.highlightedTile.gridX] =
                     self.highlightedTile
+                local matches = self.board:calculateMatches()
+                if matches then
+                    --self.level = 99999999999
+                    self.board.tiles[newTile.gridY][newTile.gridX] = newTile
+                
+                    -- tween coordinates between the two so they swap
+                    self.canInput = false
+                    Timer.tween(0.1, {
+                        [self.highlightedTile] = {x = newTile.x, y = newTile.y},
+                        [newTile] = {x = self.highlightedTile.x, y = self.highlightedTile.y}
+                    })                    
+                    :finish(function()
+                        self:calculateMatches()
+                    end)
+                    self.canInput = true
 
-                self.board.tiles[newTile.gridY][newTile.gridX] = newTile
+                else
+                    gSounds['clock']:play()
+                    self.board.tiles[newTile.gridY][newTile.gridX] = newTile
+                    self.board.tiles[self.highlightedTile.gridY][self.highlightedTile.gridX] =
+                        self.highlightedTile
+                end
 
-                -- tween coordinates between the two so they swap
-                Timer.tween(0.1, {
-                    [self.highlightedTile] = {x = newTile.x, y = newTile.y},
-                    [newTile] = {x = self.highlightedTile.x, y = self.highlightedTile.y}
-                })
+                
+
                 
                 -- once the swap is finished, we can tween falling blocks as needed
-                :finish(function()
-                    self:calculateMatches()
-                end)
+
             end
+
         end
     end
 
@@ -215,7 +233,11 @@ function PlayState:calculateMatches()
     -- if no matches, we can continue playing
     else
         self.canInput = true
-       
+
+        --tempX1 = self.highlightedTile.gridX
+        --tempY1 = self.highlightedTile.gridY
+        
+    
     end
 end
 
